@@ -4,12 +4,22 @@
             [cloffeine.async-cache :as async-cache]
             [cloffeine.loading-cache :as loading-cache]
             [cloffeine.async-loading-cache :as async-loading-cache]
-            [clojure.test :refer [deftest is testing]]
+            [clojure.test :refer [deftest is testing use-fixtures]]
             [promesa.core :as p]
             [clojure.string :as s])
   (:import [com.google.common.testing FakeTicker]
            [com.github.benmanes.caffeine.cache Ticker]
-           [java.util.concurrent TimeUnit]))
+           [java.util.concurrent TimeUnit]
+           [java.util.logging Logger Level]))
+
+(defn configure-logger [test-fn]
+  (let [logger (Logger/getLogger "com.github.benmanes.caffeine")
+        initial-level (.getLevel logger)]
+    (.setLevel logger (Level/SEVERE))
+    (test-fn)
+    (.setLevel logger initial-level)))
+
+(use-fixtures :each configure-logger)
 
 (defn- reify-ticker [^FakeTicker ft]
   (reify Ticker
@@ -58,6 +68,40 @@
     (cache/invalidate! lcache :key)
     (is (= "key" (cache/get lcache :key name)))
     (is (= 1 @loads))))
+
+(deftest loading-exceptions
+  (let [loads (atom 0)
+        throw? (atom false)
+        cl (common/reify-cache-loader (fn [k]
+                                        (if @throw?
+                                          (throw (ex-info "fail" {}))
+                                          (do
+                                            (swap! loads inc)
+                                            (name k)))))
+        ticker (FakeTicker.)
+        lcache (loading-cache/make-cache cl {:refreshAfterWrite 10
+                                             :timeUnit :s
+                                             :ticker (reify-ticker ticker)})]
+    (loading-cache/put! lcache :key :v)
+    (testing "successful get, existing key"
+      (is (= :v (loading-cache/get lcache :key)))
+      (is (= 0 @loads)))
+    (testing "loading a missing key"
+      (loading-cache/invalidate! lcache :key)
+      (is (= "key" (loading-cache/get lcache :key)))
+      (is (= 1 @loads)))
+    (testing "fail to load a missing key throws exception"
+      (reset! throw? true)
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo #"fail"
+                            (loading-cache/get lcache :missing-key)))
+      (is (= 1 @loads)))
+    (testing "fail to load an expired key"
+      (is (true? @throw?))
+      (.advance ticker 11 TimeUnit/SECONDS)
+      (is (= "key" (loading-cache/get lcache :key)))
+      (is (= 1 @loads))
+      (is (= "key" (loading-cache/get lcache :key)))
+      (is (= 1 @loads)))))
 
 (deftest get-if-present
   (let [cache (cache/make-cache)]
