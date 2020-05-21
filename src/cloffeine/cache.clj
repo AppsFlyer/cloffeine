@@ -5,46 +5,70 @@
            [java.util.concurrent ConcurrentMap]))
 
 (defn make-cache
+  "Create an AsyncLoadingCache. See `cloffeine.common/builder` for settings.
+  A semi-persistent mapping from keys to values. Cache entries are manually added using get(Object, Function) or put(Object, Object), and are stored in the cache until either evicted or manually invalidated.
+Implementations of this interface are expected to be thread-safe, and can be safely accessed by multiple concurrent threads."
   (^Cache []
    (make-cache {}))
   (^Cache [settings]
    (let [bldr (common/make-builder settings)]
      (.build bldr))))
 
-(defn get [^Cache cache k loading-fn]
+(defn get
+  "Returns the value associated with the key in this cache, obtaining that value from the mappingFunction if necessary."
+  [^Cache cache k loading-fn]
   (.get cache k (common/ifn->function loading-fn)))
 
-(defn get-all [^Cache cache ks mapping-fn]
+(defn get-all
+  "Returns a map of the values associated with the keys, creating or retrieving those values if necessary."
+  [^Cache cache ks mapping-fn]
   (into {} (.getAll cache ks (common/ifn->function mapping-fn))))
 
-(defn get-all-present [^Cache cache ks]
+(defn get-all-present
+  "Returns a map of the values associated with the keys in this cache."
+  [^Cache cache ks]
   (into {} (.getAllPresent cache ks)))
 
-(defn get-if-present [^Cache cache k]
+(defn get-if-present
+  "Returns the value associated with the key in this cache, or null if there is no cached value for the key."
+  [^Cache cache k]
   (.getIfPresent cache k))
 
-(defn invalidate! [^Cache cache k]
+(defn invalidate!
+  "Discards any cached value for the key."
+  [^Cache cache k]
   (.invalidate cache k))
 
 (defn invalidate-all! 
+  "Discards all entries in the cache."
   ([^Cache cache]
    (.invalidateAll cache))
   ([^Cache cache ks]
    (.invalidateAll cache ks)))
 
-(defn put! [^Cache cache k v]
+(defn put! 
+  "Associates the value with the key in this cache."
+  [^Cache cache k v]
   (.put cache k v))
 
-(defn cleanup [^Cache cache]
+(defn cleanup
+  "Performs any pending maintenance operations needed by the cache."
+  [^Cache cache]
   (.cleanUp cache))
 
-(defn estimated-size [^Cache cache]
+(defn estimated-size 
+  "Returns the approximate number of entries in this cache."
+  [^Cache cache]
   (.estimatedSize cache))
 
-(defn policy [^Cache cache]
+(defn policy
+  "Returns access to inspect and perform low-level operations on this cache based on its runtime characteristics."
+  [^Cache cache]
   (.policy cache))
 
-(defn as-map ^ConcurrentMap [^Cache cache]
+(defn as-map 
+  "Returns a view of the entries stored in this cache as a thread-safe map."
+  ^ConcurrentMap [^Cache cache]
   (.asMap cache))
 
 (defn- compute- [^ConcurrentMap m k bi-fn]

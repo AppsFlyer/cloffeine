@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[com.github.ben-manes.caffeine/caffeine "2.8.4"]]
-  :plugins [[lein-codox "0.10.5"]]
+  :plugins [[lein-codox "0.10.7"]]
   :codox {:output-path "codox"
           :source-uri "http://github.com/AppsFlyer/cloffeine/blob/{version}/{filepath}#L{line}"
           :metadata {:doc/format :markdown}}
