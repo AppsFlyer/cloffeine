@@ -8,6 +8,8 @@ Simple clojure wrapper around https://github.com/ben-manes/caffeine cache.
 
 add `[com.appsflyer/cloffeine "0.1.5"]` under `:dependencies`
 
+## [Checkout the docs](https://appsflyer.github.io/cloffeine/index.html)
+
 Usage:
 ------
 Manual loading:
@@ -78,5 +80,5 @@ Async with automatic loading:
 
 Todo:
 -----
-* Weight functions
+* ~~Weight functions~~
 * Listeners
