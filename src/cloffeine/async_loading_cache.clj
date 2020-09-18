@@ -9,11 +9,11 @@
   "Create an AsyncLoadingCache. See `cloffeine.common/builder` for settings.
    A semi-persistent mapping from keys to values. Values are automatically loaded by the cache asynchronously, and are stored in the cache until either evicted or manually invalidated.)
 Implementations of this interface are expected to be thread-safe, and can be safely accessed by multiple concurrent threads."
-  (^AsyncLoadingCache [^CacheLoader cl]
-   (make-cache cl {}))
-  (^AsyncLoadingCache [^CacheLoader cl settings]
+  (^AsyncLoadingCache [cache-loader]
+   (make-cache cache-loader {}))
+  (^AsyncLoadingCache [cache-loader settings]
    (let [bldr (common/make-builder settings)]
-     (.buildAsync bldr cl))))
+     (.buildAsync bldr cache-loader))))
 
 (defn make-cache-async-loader
   "Create a CacheLoader"

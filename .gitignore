@@ -96,3 +96,5 @@ fabric.properties
 
 .clj-kondo/.cache
 *.png
+.clj-kondo
+.lsp/sqlite.1.db

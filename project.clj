@@ -1,4 +1,4 @@
-(defproject com.appsflyer/cloffeine "0.1.5" 
+(defproject com.appsflyer/cloffeine "0.1.6" 
   :description "A warpper over https://github.com/ben-manes/caffeine"
   :url "https://github.com/AppsFlyer/cloffeine"
   :license {:name "Eclipse Public License"
