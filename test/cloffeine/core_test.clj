@@ -72,12 +72,14 @@
 (deftest loading-exceptions
   (let [loads (atom 0)
         throw? (atom false)
+        load-nil? (atom false)
         cl (common/reify-cache-loader (fn [k]
-                                        (if @throw?
-                                          (throw (ex-info "fail" {}))
-                                          (do
-                                            (swap! loads inc)
-                                            (name k)))))
+                                        (cond
+                                          @throw?  (throw (ex-info "fail" {}))
+                                          @load-nil? nil
+                                          :else (do
+                                                  (swap! loads inc)
+                                                  (name k)))))
         ticker (FakeTicker.)
         lcache (loading-cache/make-cache cl {:refreshAfterWrite 10
                                              :timeUnit :s
@@ -101,7 +103,12 @@
       (is (= "key" (loading-cache/get lcache :key)))
       (is (= 1 @loads))
       (is (= "key" (loading-cache/get lcache :key)))
-      (is (= 1 @loads)))))
+      (is (= 1 @loads)))
+    (testing "loading a missing key but loader returns nil. nil returns, but mapping is not changed"
+      (reset! throw? false)
+      (reset! load-nil? true)
+      (is (nil? (loading-cache/get lcache :not-there)))
+      (is (= [:key] (keys (.asMap lcache)))))))
 
 (deftest get-if-present
   (let [cache (cache/make-cache)]
