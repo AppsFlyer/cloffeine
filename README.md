@@ -6,7 +6,10 @@ Simple clojure wrapper around https://github.com/ben-manes/caffeine cache.
 
 [![Coverage Status](https://coveralls.io/repos/github/AppsFlyer/cloffeine/badge.svg?branch=master)](https://coveralls.io/github/AppsFlyer/cloffeine?branch=master)
 
-add `[com.appsflyer/cloffeine "0.1.5"]` under `:dependencies`
+[![cljdoc badge](https://cljdoc.org/badge/com.appsflyer/cloffeine)](https://cljdoc.org/d/com.appsflyer/cloffeine/CURRENT)
+
+
+add `[com.appsflyer/cloffeine "0.1.7"]` under `:dependencies`
 
 ## [Checkout the docs](https://appsflyer.github.io/cloffeine/index.html)
 
@@ -80,5 +83,4 @@ Async with automatic loading:
 
 Todo:
 -----
-* ~~Weight functions~~
 * Listeners
