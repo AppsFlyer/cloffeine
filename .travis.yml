@@ -1,7 +1,11 @@
 language: clojure
-lein: 2.6.1 # version 2 and up
+dist: bionic
+lein: lein
 jdk:
 - openjdk8
+- openjdk11
+- openjdk13
+- openjdk15
 after_script:
   - bash -ex test/coveralls.sh
 jobs:
