@@ -1,5 +1,6 @@
 language: clojure
-lein: 2.6.1 # version 2 and up
+dist: xenial
+lein: lein
 jdk:
 - openjdk8
 - openjdk11
