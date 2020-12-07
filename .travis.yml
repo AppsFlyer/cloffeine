@@ -1,5 +1,5 @@
 language: clojure
-dist: xenial
+dist: focal
 lein: lein
 jdk:
 - openjdk8
