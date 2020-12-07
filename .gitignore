@@ -98,3 +98,6 @@ fabric.properties
 *.png
 .clj-kondo
 .lsp/sqlite.1.db
+.classpath
+.project
+.settings

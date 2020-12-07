@@ -3,7 +3,10 @@
   (:require [cloffeine.common :as common]
             [cloffeine.async-cache :as acache]
             [cloffeine.loading-cache :as loading-cache])
-  (:import [com.github.benmanes.caffeine.cache AsyncCache AsyncLoadingCache CacheLoader AsyncCacheLoader]))
+  (:import [com.github.benmanes.caffeine.cache 
+            AsyncCache 
+            AsyncLoadingCache 
+            AsyncCacheLoader]))
 
 (defn make-cache
   "Create an AsyncLoadingCache. See `cloffeine.common/builder` for settings.
