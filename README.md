@@ -9,7 +9,7 @@ Simple clojure wrapper around https://github.com/ben-manes/caffeine cache.
 [![cljdoc badge](https://cljdoc.org/badge/com.appsflyer/cloffeine)](https://cljdoc.org/d/com.appsflyer/cloffeine/CURRENT)
 
 
-add `[com.appsflyer/cloffeine "0.1.7"]` under `:dependencies`
+add `[com.appsflyer/cloffeine "0.1.8"]` under `:dependencies`
 
 ## [Checkout the docs](https://appsflyer.github.io/cloffeine/index.html)
 
