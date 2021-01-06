@@ -1,27 +1,35 @@
 (ns cloffeine.loading-cache
   (:refer-clojure :exclude [get])
-  (:require [cloffeine.common :as common]
-            [cloffeine.cache :as cache])
-  (:import [com.github.benmanes.caffeine.cache Cache LoadingCache CacheLoader]))
+  (:require [cloffeine.cache :as cache]
+            [cloffeine.common :as common])
+  (:import [com.github.benmanes.caffeine.cache Cache CacheLoader LoadingCache]))
 
 (defn make-cache
-  "Create an AsyncLoadingCache. See `cloffeine.common/builder` for settings.
-  A semi-persistent mapping from keys to values. Values are automatically loaded by the cache, and are stored in the cache until either evicted or manually invalidated.
-Implementations of this interface are expected to be thread-safe, and can be safely accessed by multiple concurrent threads."
+  "Create a LoadingCache. See `cloffeine.common/builder` for settings.
+  A semi-persistent mapping from keys to values. Values are automatically loaded
+  by the cache, and are stored in the cache until either evicted or manually
+  invalidated.
+  Implementations of this interface are expected to be thread-safe, and can be
+  safely accessed by multiple concurrent threads."
   (^LoadingCache [^CacheLoader cl]
    (make-cache cl {}))
   (^LoadingCache [^CacheLoader cl settings]
    (let [bldr (common/make-builder settings)]
      (.build bldr cl))))
 
-(def get-if-present cache/get-if-present)
+(def ^{:doc "Returns the value associated with the key in this cache, or nil if
+            there is no cached value for the key."}
+  get-if-present cache/get-if-present)
 
-(def invalidate! cache/invalidate!)
+(def ^{:doc "Disassociates the value cached for the key."}
+  invalidate! cache/invalidate!)
 
-(def put! cache/put!)
+(def ^{:doc "Associates the value with the key in this cache."}
+  put! cache/put!)
 
 (defn get
-  "Returns the value associated with the key in this cache, obtaining that value from CacheLoader.load(Object) if necessary."
+  "Returns the value associated with the key in this cache, obtaining that value
+  from CacheLoader.load(Object) if necessary."
   ([^LoadingCache lcache k]
    (.get lcache k))
   ([^Cache lcache k loading-fn]
@@ -38,6 +46,7 @@ Implementations of this interface are expected to be thread-safe, and can be saf
   (.refresh lcache k))
 
 (defn get-all 
-  "Returns a map of the values associated with the keys, creating or retrieving those values if necessary."
+  "Returns a map of the values associated with the keys, creating or retrieving
+  those values if necessary."
   [^LoadingCache lcache ks]
   (into {} (.getAll lcache ks)))

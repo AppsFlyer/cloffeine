@@ -1,6 +1,6 @@
 # Cloffeine 
 
-Simple clojure wrapper around https://github.com/ben-manes/caffeine cache.
+Simple clojure wrapper over [`Caffeine`](https://github.com/ben-manes/caffeine).
 
 [![Clojars Project](https://img.shields.io/clojars/v/com.appsflyer/cloffeine.svg)](https://clojars.org/com.appsflyer/cloffeine)
 
@@ -8,14 +8,16 @@ Simple clojure wrapper around https://github.com/ben-manes/caffeine cache.
 
 [![cljdoc badge](https://cljdoc.org/badge/com.appsflyer/cloffeine)](https://cljdoc.org/d/com.appsflyer/cloffeine/CURRENT)
 
-
-add `[com.appsflyer/cloffeine "0.1.8"]` under `:dependencies`
+## Installing
+Add `[com.appsflyer/cloffeine "0.1.9"]` to your `project.clj` under `:dependencies`.
 
 ## [Checkout the docs](https://appsflyer.github.io/cloffeine/index.html)
 
-Usage:
-------
-Manual loading:
+
+
+## Usage
+
+### Manual loading
 
 ```clojure
 (require '[cloffeine.cache :as cache])
@@ -28,7 +30,7 @@ Manual loading:
 (is (= "key" (cache/get cache :key name)))
 ```
 
-Automatic loading
+### Automatic loading
 
 ```clojure
 (require '[cloffeine.loading-cache :as loading-cache])
@@ -52,10 +54,9 @@ Automatic loading
 (cache/invalidate! lcache :key)
 (is (= "key" (cache/get lcache :key name)))
 (is (= 1 @loads))
-
 ```
 
-Async:
+### Async cache
 
 ```clojure
 (require '[cloffeine.async-cache :as async-cache])
@@ -66,10 +67,9 @@ Async:
 (is (= :v @(async-cache/get acache :key name)))
 (async-cache/invalidate! acache :key)
 (is (= "key" @(async-cache/get acache :key name)))
-
 ```
 
-Async with automatic loading:
+### Async with automatic loading:
 
 ```clojure
 (require '[cloffeine.async-loading-cache :as async-loading-cache])
