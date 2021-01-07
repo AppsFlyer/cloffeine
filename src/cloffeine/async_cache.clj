@@ -7,9 +7,7 @@
 (defn make-cache
   "Create an AsyncCache. See `cloffeine.common/builder` for settings.
   A semi-persistent mapping from keys to values. Values should be manually set in
-  the cache using cloffeine.async-cache/put!.
-  Implementations of this interface are expected to be thread-safe, and can be
-  safely accessed by multiple concurrent threads."
+  the cache using cloffeine.async-cache/put!."
   (^AsyncCache []
    (make-cache {}))
   (^AsyncCache [settings]

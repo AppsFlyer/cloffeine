@@ -8,9 +8,7 @@
   "Create a LoadingCache. See `cloffeine.common/builder` for settings.
   A semi-persistent mapping from keys to values. Cache entries are manually added
   using get(Object, Function) or put(Object, Object), and are stored in the cache
-  until either evicted or manually invalidated.
-  Implementations of this interface are expected to be thread-safe, and can be
-  safely accessed by multiple concurrent threads."
+  until either evicted or manually invalidated."
   (^Cache []
    (make-cache {}))
   (^Cache [settings]

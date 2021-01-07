@@ -13,9 +13,7 @@
   "Create an AsyncLoadingCache. See `cloffeine.common/builder` for settings.
   A semi-persistent mapping from keys to values. Values are automatically loaded
   by the cache synchronously, and are stored in the cache until either evicted
-  or manually invalidated.
-  Implementations of this interface are expected to be thread-safe, and can be
-  safely accessed by multiple concurrent threads."
+  or manually invalidated."
   (^AsyncLoadingCache [^CacheLoader cache-loader]
    (make-cache cache-loader {}))
   (^AsyncLoadingCache [^CacheLoader cache-loader settings]
