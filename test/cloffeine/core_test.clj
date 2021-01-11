@@ -10,7 +10,8 @@
   (:import [com.google.common.testing FakeTicker]
            [com.github.benmanes.caffeine.cache Ticker]
            [java.util.concurrent TimeUnit]
-           [java.util.logging Logger Level]))
+           [java.util.logging Logger Level]
+           [clojure.lang ExceptionInfo]))
 
 (defn configure-logger [test-fn]
   (let [logger (Logger/getLogger "com.github.benmanes.caffeine")
@@ -94,7 +95,7 @@
       (is (= 1 @loads)))
     (testing "fail to load a missing key throws exception"
       (reset! throw? true)
-      (is (thrown-with-msg? clojure.lang.ExceptionInfo #"fail"
+      (is (thrown-with-msg? ExceptionInfo #"fail"
                             (loading-cache/get lcache :missing-key)))
       (is (= 1 @loads)))
     (testing "fail to load an expired key"

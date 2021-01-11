@@ -1,3 +1,8 @@
+#### VERSION 0.1.9
+* Clarify docstrings
+* Differentiate the construction of an AsyncLoadingCache that uses a CacheLoader
+vs. an AsyncCacheLoader
+
 #### VERSION 0.1.8
 * Bump caffeine to 2.8.8
 
