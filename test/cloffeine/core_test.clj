@@ -8,7 +8,7 @@
             [promesa.core :as p]
             [clojure.string :as s])
   (:import [com.google.common.testing FakeTicker]
-           [com.github.benmanes.caffeine.cache Ticker]
+           [com.github.benmanes.caffeine.cache Ticker RemovalCause]
            [java.util.concurrent TimeUnit]
            [java.util.logging Logger Level]
            [clojure.lang ExceptionInfo]))
@@ -192,6 +192,7 @@
   (let [loads (atom 0)
         reloads (atom 0)
         reload-fails? (atom false)
+        replaced (atom [])
         db (atom {:key 17})
         cl (common/reify-cache-loader
              (fn [k]
@@ -202,9 +203,14 @@
                (if @reload-fails?
                  (throw (Exception. (format "reload failed for key: %s" k)))
                  (get @db k))))
+        removal-listener (common/reify-removal-listener
+                           (fn [_k v cause]
+                             (when (= cause RemovalCause/REPLACED)
+                               (swap! replaced conj v))))
         ticker (FakeTicker.)
         lcache (loading-cache/make-cache cl {:refreshAfterWrite 10
                                              :timeUnit :s
+                                             :removalListener removal-listener
                                              :ticker (reify-ticker ticker)})]
     (testing "no key, load succeeds"
       (is (= 17 (loading-cache/get lcache :key)))
@@ -222,6 +228,7 @@
       (loading-cache/cleanup lcache)
       (Thread/sleep 10)
       (is (= 1 @reloads))
+      (is (= [17] @replaced))
       (is (= 42 (loading-cache/get lcache :key))))
     (testing "time to refresh again, but reload fails"
       (reset! reload-fails? true)
@@ -231,12 +238,14 @@
       (is (= 1 @reloads))
       (is (= 42 (loading-cache/get lcache :key)))
       (is (= 1 @reloads))
+      (is (= [17] @replaced))
       (reset! reload-fails? false)
       (.advance ticker 10 TimeUnit/SECONDS)
       (is (= 42 (loading-cache/get lcache :key)))
       (loading-cache/cleanup lcache)
       (Thread/sleep 10)
       (is (= 2 @reloads))
+      (is (= [17 42] @replaced))
       (is (= 43 (loading-cache/get lcache :key)))
       (is (= 2 @reloads)))))
 

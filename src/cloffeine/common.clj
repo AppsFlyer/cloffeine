@@ -2,7 +2,7 @@
   (:import [com.github.benmanes.caffeine.cache AsyncCacheLoader
                                                Cache
                                                CacheLoader
-                                               CacheWriter
+                                               RemovalListener
                                                Caffeine
                                                Weigher]
            [com.github.benmanes.caffeine.cache.stats CacheStats]
@@ -49,16 +49,13 @@
   * `:ticker` `com.github.benmanes.caffeine.cache.Ticker` Specifies a
       nanosecond-precision time source for use in determining when entries should
       be expired or refreshed. By default, System.nanoTime() is used.
-  * `:removalListener` `com.github.benmanes.caffeine.cache.RemovalListener`.
+  * `:weigher` `com.github.benmanes.caffeine.cache.Weigher` Specifies the weigher
+      to use in determining the weight of entries.
+  * `:evictionListener` `com.github.benmanes.caffeine.cache.RemovalListener` 
       Specifies a listener instance that caches should notify each time an entry
       is removed for any reason. Each cache created by this builder will invoke
       this listener as part of the routine maintenance described in the class
       documentation above.
-  * `:weigher` `com.github.benmanes.caffeine.cache.Weigher` Specifies the weigher
-      to use in determining the weight of entries.
-  * `:writer` `com.github.benmanes.caffeine.cache.CacheWriter` Specifies a writer
-      instance that caches should notify each time an entry is explicitly created
-      or modified, or removed for any reason.
   * `:timeUnit` ``[:ms :us :s :m :h :d]`` default is `:s`"
   ^Caffeine [settings]
   (let [bldr     (Caffeine/newBuilder)
@@ -83,7 +80,7 @@
             (:ticker settings) (.ticker (:ticker settings))
             (:removalListener settings) (.removalListener (:removalListener settings))
             (:weigher settings) (.weigher (:weigher settings))
-            (:writer settings) (.writer (:writer settings)))))
+            (:evictionListener settings) (.evictionListener (:evictionListener settings)))))
 
 (defn reify-async-cache-loader
   "A helper for implementing an `AsyncCacheLoader`.
@@ -125,19 +122,15 @@
      (reload [_this k v]
        (reloading-fn k v)))))
 
-(defn reify-cache-writer
-  "A helper for implementing `CacheWriter`
+(defn reify-removal-listener
+  "A helper for implementing `RemovalListener`
   
-  * `delete-handler` - `(fn [this k v removal-cause])`. Deletes the value
-    corresponding to the key from the external resource.
-  * `write-handler` - `(fn [this k v])`. Writes the value corresponding to the
-    key to the external resource."
-  [delete-handler write-handler]
-  (reify CacheWriter
-    (delete ^void [this k v removal-cause]
-      (delete-handler this k v removal-cause))
-    (write ^void [this k v]
-      (write-handler this k v))))
+  * `removal-handler` - `(fn [k v removal-cause])`. React upon removal
+  of k. `cause` is a `RemovalCause` enum: {COLLECTED|EXPIRED|EXPLICIT|REPLACED|SIZE}"
+  [removal-handler]
+  (reify RemovalListener
+    (onRemoval [_this k v cause] 
+      (removal-handler k v cause))))
 
 (defn reify-weigher
   "A helper for implementing `Weigher`.
