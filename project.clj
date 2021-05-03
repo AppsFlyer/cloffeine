@@ -1,9 +1,9 @@
-(defproject com.appsflyer/cloffeine "0.2.0"
+(defproject com.appsflyer/cloffeine "1.0.0"
   :description "A warpper over https://github.com/ben-manes/caffeine"
   :url "https://github.com/AppsFlyer/cloffeine"
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[com.github.ben-manes.caffeine/caffeine "2.9.0"]]
+  :dependencies [[com.github.ben-manes.caffeine/caffeine "3.0.2"]]
   :plugins [[lein-codox "0.10.7"]]
   :codox {:output-path "codox"
           :source-uri  "http://github.com/AppsFlyer/cloffeine/blob/{version}/{filepath}#L{line}"

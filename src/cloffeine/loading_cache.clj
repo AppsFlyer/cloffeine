@@ -43,6 +43,11 @@
   [^LoadingCache lcache k]
   (.refresh lcache k))
 
+(defn refresh-all
+  "Loads a new value for the keys, asynchronously."
+  [^LoadingCache lcache ks]
+  (.refreshAll lcache ks))
+
 (defn get-all 
   "Returns a map of the values associated with the keys, creating or retrieving
   those values if necessary."

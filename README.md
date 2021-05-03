@@ -9,10 +9,13 @@ Simple clojure wrapper over [`Caffeine`](https://github.com/ben-manes/caffeine).
 [![cljdoc badge](https://cljdoc.org/badge/com.appsflyer/cloffeine)](https://cljdoc.org/d/com.appsflyer/cloffeine/CURRENT)
 
 ## Installing
-Add `[com.appsflyer/cloffeine "0.1.9"]` to your `project.clj` under `:dependencies`.
+Add `[com.appsflyer/cloffeine "1.0.0"]` to your `project.clj` under `:dependencies`.
 
 ## [Checkout the docs](https://appsflyer.github.io/cloffeine/index.html)
 
+## Stability
+* This project is used in production already
+* Since 1.0.0 th project will change the major semver iff Caffeine does so (currently at 3.x)
 
 
 ## Usage
@@ -80,7 +83,3 @@ Add `[com.appsflyer/cloffeine "0.1.9"]` to your `project.clj` under `:dependenci
 (async-loading-cache/invalidate! alcache :key)
 (is (= "key" @(async-loading-cache/get alcache :key name)))
 ```
-
-Todo:
------
-* Listeners
