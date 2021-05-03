@@ -14,8 +14,8 @@ Add `[com.appsflyer/cloffeine "1.0.0"]` to your `project.clj` under `:dependenci
 ## [Checkout the docs](https://appsflyer.github.io/cloffeine/index.html)
 
 ## Stability
-* This project is used in production already
-* Since 1.0.0 th project will change the major semver iff Caffeine does so (currently at 3.x)
+* This project is used in production already and is deemed stable.
+* Since 1.0.0 the project will change the major semver iff Caffeine does so (currently at 3.x).
 
 
 ## Usage
